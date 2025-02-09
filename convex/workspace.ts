@@ -1,3 +1,4 @@
+import { useWorkspaceId } from './../src/features/hooks/use-workspace-id';
 // Import the query function from the generated server module
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values"
@@ -27,6 +28,30 @@ export const create = mutation({
     return workSpaceId
   }
 })
+
+
+
+
+export const getById = query({
+  args: { id: v.id("workspaces") }, // Define the arguments here
+  handler: async (ctx, args) => {
+    // Access the args directly within this scope
+    const userId = await auth.getUserId(ctx)
+
+    if (!userId) {
+      throw new Error("Unauthorized")
+    }
+
+    const workspace = ctx.db.get(args.id); // Use the correctly destructured variable
+
+    if (!workspace) {
+      throw new Error(`Workspace with ID ${args.id} not found`);
+    }
+
+    return workspace;
+  }
+});
+
 
 // Define a query named 'get' which will be used to fetch data from the database
 export const get = query({
