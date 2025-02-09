@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useCurrentUser } from "../hooks/use-current-user";
+import { useCurrentUser } from "../api/use-current-user";
 import { Loader, LogOut } from "lucide-react";
 import { useAuthActions } from "@convex-dev/auth/react";
 
@@ -39,14 +39,8 @@ export const UserButton = () => {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" side="right" className="w-60">
-        <DropdownMenuItem className="h-10">
-          <LogOut
-            onClick={() => {
-              signOut;
-            }}
-            className="size-4 mr-2 text-black"
-          ></LogOut>{" "}
-          LogOut
+        <DropdownMenuItem className="h-10" onClick={() => signOut()}>
+          <LogOut className="size-4 mr-2 text-black"></LogOut> LogOut
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
