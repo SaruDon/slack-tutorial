@@ -30,9 +30,5 @@ export default function Home() {
     }
   }, [workSpaceId, isLoading, open, setOpen, router]);
 
-  return (
-    <div>
-      <UserButton></UserButton>
-    </div>
-  );
+  return <div></div>;
 }

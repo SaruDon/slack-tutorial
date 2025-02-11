@@ -1,8 +1,16 @@
-import { useWorkspaceId } from './../src/features/hooks/use-workspace-id';
 // Import the query function from the generated server module
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values"
 import { auth } from "./auth";
+
+
+const generateCode = () => {
+  const characters = "0123456789abcdefghijklmnopqrstuvwxyz"; // Fixed the letters
+  const code = Array.from({ length: 6 }, () =>
+    characters[Math.floor(Math.random() * characters.length)] // Use dynamic length
+  ).join('');
+  return code;
+};
 
 export const create = mutation({
   args: {
@@ -14,18 +22,20 @@ export const create = mutation({
       throw new Error("user not Loggedin")
     }
 
-    const joinCode = "123456"
+    const joinCode = generateCode();
 
-    const workSpaceId = await ctx.db.insert("workspaces", {
+    const workspaceId = await ctx.db.insert("workspaces", {
       name: args.name,
       userId,
       joinCode
     })
 
-    const workSpace = await ctx.db.get(workSpaceId)
-    console.log('workSpace', workSpace)
+    await ctx.db.insert("members", { userId, workspaceId, role: "admin" })
 
-    return workSpaceId
+    const workspace = await ctx.db.get(workspaceId)
+    console.log('workSpace', workspace)
+
+    return workspaceId
   }
 })
 
@@ -42,13 +52,23 @@ export const getById = query({
       throw new Error("Unauthorized")
     }
 
-    const workspace = ctx.db.get(args.id); // Use the correctly destructured variable
 
-    if (!workspace) {
-      throw new Error(`Workspace with ID ${args.id} not found`);
+    const memeber = await ctx.db
+      .query("members")
+      .withIndex("by_workspace_id_user_id", (q) => q.eq("workspaceId", args.id).eq("userId", userId))
+      .unique
+
+    if (!memeber) {
+      return null
     }
 
-    return workspace;
+    // const workspace = ctx.db.get(args.id); // Use the correctly destructured variable
+
+    // if (!workspace) {
+    //   throw new Error(`Workspace with ID ${args.id} not found`);
+    // }
+
+    return ctx.db.get(args.id);;
   }
 });
 
@@ -61,6 +81,27 @@ export const get = query({
   // Define the handler function that will execute when the query is invoked
   handler: async (ctx) => {
     // Use the database context 'ctx' to query the "workspaces" collection and collect all documents from it
-    return await ctx.db.query("workspaces").collect();
+    const userId = await auth.getUserId(ctx)
+    if (!userId) {
+      return [];
+    }
+
+    const members = await ctx.db
+      .query("members")
+      .withIndex("by_user_id", (q) => q.eq("userId", userId))
+      .collect()
+
+    const workspaceIds = members.map((member) => member.workspaceId)
+
+    const workspaces = []
+
+    for (const workspaceId of workspaceIds) {
+      const workspace = await ctx.db.get(workspaceId)
+      if (workspace) {
+        workspaces.push(workspace)
+      }
+    }
+
+    return workspaces;
   }
 });
