@@ -1,9 +1,17 @@
 import { useCurrentMember } from "@/features/auth/members/api/use-current-members";
 import { useGetWorkSpace } from "@/features/workspaces/api/use-get-workspace";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
-import { AlertTriangle, Loader } from "lucide-react";
+import {
+  AlertTriangle,
+  HashIcon,
+  Loader,
+  MessageSquareText,
+} from "lucide-react";
 import { WorkspaceHeader } from "./workspace-header";
 import { Doc } from "../../../../convex/_generated/dataModel";
+import { SidebarItem } from "./sidebare-item";
+import { useGetChannels } from "@/features/channels/api/use-get-channels";
+import { WorkspaceSection } from "./workspace-section";
 
 export const WorkspaceSidebar = () => {
   const workspaceId = useWorkspaceId();
@@ -14,8 +22,11 @@ export const WorkspaceSidebar = () => {
   const { data: workspace, isLoading: workspaceLoading } = useGetWorkSpace({
     id: workspaceId,
   });
+  const { data: channels, isLoading: channelsIsLoading } = useGetChannels({
+    workspaceId,
+  });
 
-  if (workspaceLoading || memberLoading) {
+  if (workspaceLoading || memberLoading || channelsIsLoading) {
     return (
       <div className="flex flex-col bg-[#5e2c5f] h-screen items-center justify-center">
         <Loader className="size-5 animate-spin text-white" />
@@ -37,7 +48,29 @@ export const WorkspaceSidebar = () => {
       <WorkspaceHeader
         workspace={workspace}
         isAdmin={member.role === "admin"}
-      />{" "}
+      />
+      <div className="flex flex-col m-t-3 px-2">
+        <SidebarItem label="Threads" icon={MessageSquareText} id="threads" />
+        <SidebarItem
+          label="Dafts & Sent"
+          icon={MessageSquareText}
+          id="threads"
+        />
+      </div>
+      <WorkspaceSection
+        label="Channels"
+        hint="New Channel"
+        onNew={() => console.log("New Channel Clicked")}
+      >
+        {channels?.map((item) => (
+          <SidebarItem
+            key={item._id.toString()}
+            label={item.name}
+            icon={HashIcon}
+            id={item._id.toString()}
+          />
+        ))}
+      </WorkspaceSection>
     </div>
   );
 };
