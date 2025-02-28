@@ -14,15 +14,13 @@ import { TrashIcon } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { useCreateChannel } from "@/features/channels/api/use-create-channel";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { useUpdateChannel } from "@/features/channels/api/use-update-channel";
 import { useChannelId } from "@/hooks/use-channel-id";
 import { useRemoveChannel } from "@/features/channels/api/use-remove-channel";
-import { mutation } from "../../../../../../convex/_generated/server";
 import { useConfirm } from "@/hooks/use-confirm";
-import { useGetChannels } from "@/features/channels/api/use-get-channels";
 import { useRouter } from "next/navigation";
+import { useCurrentMember } from "@/features/members/api/use-current-members";
 
 interface HeaderProps {
   title: string;
@@ -35,10 +33,6 @@ export const Header = ({ title }: HeaderProps) => {
   const workspaceId = useWorkspaceId();
   const channelId = useChannelId();
 
-  const { data: channels, isLoading: isChannelsLoading } = useGetChannels({
-    workspaceId,
-  });
-
   const { mutate: updateChannel, isPending: isUpdatePending } =
     useUpdateChannel();
 
@@ -49,6 +43,15 @@ export const Header = ({ title }: HeaderProps) => {
     "Delete this channel",
     "This action is irreversible"
   );
+
+  const { data: member } = useCurrentMember({ workspaceId });
+
+  const handleEditOpen = (value: boolean) => {
+    if (member?.role !== "admin") {
+      return;
+    }
+    setIsEditOpen(true);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value.replace(/\s+/g, "-").toLowerCase();
@@ -65,9 +68,7 @@ export const Header = ({ title }: HeaderProps) => {
       },
       {
         onSuccess: () => {
-          router.replace(
-            `/workspace/${workspaceId}/channel/${channels?.[0]._id}`
-          );
+          router.replace(`/workspace/${workspaceId}`);
           setIsEditOpen(false);
           toast.success("Channel deleted");
         },
@@ -115,14 +116,16 @@ export const Header = ({ title }: HeaderProps) => {
           <DialogHeader className="p-4  border-b bg-white">
             <DialogTitle className="mb-2"># {title}</DialogTitle>
             <div className="px-1 pb-4 flex flex-col gap-y-2.5">
-              <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+              <Dialog open={isEditOpen} onOpenChange={handleEditOpen}>
                 <div className="px-4 py-4 bg-white border rounded-lg cursor-pointer hover:bg-grey-50 gap-y-1">
                   <div className="flex items-center justify-between">
                     <p className="font-semibold text-sm">Channel name</p>
                     <DialogTrigger>
-                      <p className="text-[#1264ae] text-sm  font-semibold hover:underline">
-                        Edit
-                      </p>
+                      {member?.role === "admin" && (
+                        <p className="text-[#1264ae] text-sm  font-semibold hover:underline">
+                          Edit
+                        </p>
+                      )}
                     </DialogTrigger>
                   </div>
                   <p className="text-sm"># {title}</p>
@@ -154,13 +157,15 @@ export const Header = ({ title }: HeaderProps) => {
                   </form>
                 </DialogContent>
               </Dialog>
-              <button
-                onClick={handleDelete}
-                className="flex items-start gap-x-2 px-5 py-4 bg-white rounded-lg cursor-pointer text-rose-600 border hover:bg-grey-500"
-              >
-                <TrashIcon className="size-4" />
-                <p className="text-sm">Delete Channel</p>
-              </button>
+              {member?.role == "admin" && (
+                <button
+                  onClick={handleDelete}
+                  className="flex items-start gap-x-2 px-5 py-4 bg-white rounded-lg cursor-pointer text-rose-600 border hover:bg-grey-500"
+                >
+                  <TrashIcon className="size-4" />
+                  <p className="text-sm">Delete Channel</p>
+                </button>
+              )}
             </div>
           </DialogHeader>
         </DialogContent>
