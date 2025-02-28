@@ -29,7 +29,7 @@ export const create = mutation({
 
     const channelId = await ctx.db.insert("channels", { name: parsedName, workspaceId: args.workspaceId })
 
-    return channelId
+    return channelId;
 
   }
 })

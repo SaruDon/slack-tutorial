@@ -14,8 +14,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useCreateChannel } from "../api/use-create-channel";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
+import { useRouter } from "next/navigation";
 
 export const CreateChannelModal = () => {
+  const router = useRouter();
   const [open, setOpen] = useCreateChannelModal();
 
   const { mutate, isPending } = useCreateChannel();
@@ -33,12 +35,13 @@ export const CreateChannelModal = () => {
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault;
+    e.preventDefault();
     mutate(
       { name, workspaceId },
       {
         onSuccess: (id) => {
-          //Todo  ReDirect to new Channel
+          console.log("id", id);
+          router.push(`/workspace/${workspaceId}/channel/${id}`);
           handleClose();
         },
       }
@@ -70,10 +73,12 @@ export const CreateChannelModal = () => {
             maxLength={80}
             placeholder="eg-buget-planner"
           />
+          <div className="flex justify-end">
+            <Button type="submit" disabled={isPending}>
+              Create
+            </Button>
+          </div>
         </form>
-        <div className="flex justify-end">
-          <Button>Create</Button>
-        </div>
       </DialogContent>
     </Dialog>
   );
