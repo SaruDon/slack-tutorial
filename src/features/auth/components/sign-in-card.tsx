@@ -45,7 +45,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
   };
 
   return (
-    <Card className="h-full w-full p-8">
+    <Card className="w-full p-4 md:p-6 lg:p-8">
       <CardHeader className="flex items-start justify-between px-0 pt-0">
         <CardTitle className="text-2xl">Login to continue</CardTitle>
         <CardDescription>Use Your email or another service</CardDescription>

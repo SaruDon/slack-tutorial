@@ -8,7 +8,7 @@ export const Sidebar = () => {
   const pathName = usePathname();
 
   return (
-    <aside className="w-[70px] h-screen bg-[#481349] flex flex-col gap-y-4 items-center pt-[9px] pb-[4px]">
+    <aside className="w-[70px] bg-[#481349] flex flex-col gap-y-4 items-center pt-[9px] pb-[50px]">
       <WorkspaceSwitcher />
       <SidebarButton
         icon={Home}

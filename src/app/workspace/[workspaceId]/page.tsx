@@ -59,7 +59,7 @@ const WorkspaceIdPage = () => {
 
   if (isChannelLoading || isWorkspaceLoading || isMemberLoading) {
     return (
-      <div className="flex items-center justify-center flex-1 gap-2 h-screen">
+      <div className="flex items-center justify-center flex-1 gap-2 ">
         <Loader className="size-6 animate-spin text-muted-foreground" />
       </div>
     );
@@ -67,7 +67,7 @@ const WorkspaceIdPage = () => {
 
   if (!workspace || !member) {
     return (
-      <div className="flex items-center justify-center flex-1 gap-2 h-screen">
+      <div className="flex items-center justify-center flex-1 gap-2 ">
         <TriangleAlert className="size-6 animate-spin text-muted-foreground" />
         <span className="text-sm text-muted-foreground">
           Workspace Not found
