@@ -13,6 +13,8 @@ import { ImageIcon, Keyboard, Smile } from "lucide-react";
 import { MdSend } from "react-icons/md";
 import { Hint } from "./hint";
 import { current } from "../../convex/members";
+import { cn } from "@/lib/utils";
+import { EmojiPopover } from "./emoji-popover";
 
 type EditorValue = {
   image: File | null;
@@ -131,6 +133,11 @@ const Editor = ({
     }
   };
 
+  const onEmojiSelect = (emoji: any) => {
+    const quill = quilRef.current;
+    quill?.insertText(quill?.getSelection()?.index || 0, emoji.native);
+  };
+
   const isEmpty = text.replace(/<(.|\n)*?>/g, "").trim().length === 0;
 
   return (
@@ -154,16 +161,11 @@ const Editor = ({
                   <PiTextAa />
                 </Button>
               </Hint>
-              <Hint label="Emojis">
-                <Button
-                  disabled={disabled}
-                  size="iconSm"
-                  variant="ghost"
-                  onClick={() => {}}
-                >
+              <EmojiPopover onEmojiSelect={onEmojiSelect}>
+                <Button disabled={disabled} size="iconSm" variant="ghost">
                   <Smile />
                 </Button>
-              </Hint>
+              </EmojiPopover>
               {variant === "create" && (
                 <Hint label="Attach image">
                   <Button
@@ -212,7 +214,12 @@ const Editor = ({
         </div>
       </div>
       {variant === "create" && (
-        <div className="p-2 text-sm text-muted-foreground flex justify-end">
+        <div
+          className={cn(
+            "p-2 text-sm text-muted-foreground flex justify-end opacity-0",
+            !isEmpty && "opacity-100"
+          )}
+        >
           <p>
             <strong>Shift + Return</strong> to add new line
           </p>
