@@ -52,15 +52,12 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
         image: undefined, // Initialize image as undefined
       };
 
-      console.log("image", image);
-
       if (image) {
         // Step 1: Generate a URL for uploading the image
         const url = await generateUrl({}, { throwError: true });
         if (!url) {
           throw new Error("Url not found");
         }
-        console.log("url", url);
         // Step 2: Upload the image to the generated URL
         const result = await fetch(url, {
           method: "POST",
@@ -70,10 +67,8 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
 
         if (!result.ok) throw new Error("Failed to upload image");
 
-        console.log("result", result);
         // Step 3: Extract the storage ID from the response
         const { storageId } = await result.json();
-        console.log("first", storageId);
 
         values.image = storageId; // Associate the image with the message
       }
