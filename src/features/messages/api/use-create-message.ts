@@ -13,7 +13,7 @@ type RequestType = {
   workspaceId: Id<"workspaces">
   channelId?: Id<"channels">
   parentMessageId?: Id<"messages">
-  //Todo conversation
+  conversationId?: Id<"conversations">
 }
 type ResponseType = Id<"messages"> | null
 

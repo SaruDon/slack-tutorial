@@ -20,8 +20,9 @@ export const create = mutation({
     image: v.optional(v.id("_storage")),
     workspaceId: v.id("workspaces"),
     channelId: v.optional(v.id("channels")),
+    conversationId: v.optional(v.id("conversations")),
     messageId: v.optional(v.id("messages")),
-    //Todo conversation Id
+    parentMessageId: v.optional(v.id("messages"))
   },
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx)
@@ -38,17 +39,28 @@ export const create = mutation({
 
     console.log('agrs.imgage', args.image)
 
-    //Todo Handle conversationId
+    let _conversationId = args.conversationId;
+
+    //! Reply in thread
+    if (!args.conversationId && !args.channelId && args.parentMessageId) {
+      const parentMessage = await ctx.db.get(args.parentMessageId);
+      if (!parentMessage) {
+        throw new Error("Parent message not found")
+      }
+      _conversationId = parentMessage.conversationId
+    }
+
+
 
     const messageId = await ctx.db.insert("messages", {
       memberId: member._id,
       image: args.image,
-      channeId: args.channelId,
+      channelId: args.channelId,
+      conversationId: _conversationId,
       parentMessageId: args.messageId,
       workspaceId: args.workspaceId,
       body: args.body,
-      updatedAt: Date.now()
-      //Todo handle conversation Id
+      updatedAt: Date.now(),
     })
 
     return messageId
