@@ -22,7 +22,6 @@ const JoinPage = () => {
 
   // Ensure `data` is defined before accessing `isMember`
   const isMember = useMemo(() => data?.isMember, [data]);
-  console.log(data?.isMember);
 
   useEffect(() => {
     if (isMember) {

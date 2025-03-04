@@ -124,6 +124,12 @@ body,
   padding: 0px !important
 }
 
+.messsage-scrollbar{
+  scrollbar-width: thin;
+  scrollbar-color: #dcdcdc #f8f8f8;
+}
+
+
 .ql-editor::before{
   left:12px !important;
   font-family: "Lato", sans-serif !important;
@@ -133,3 +139,4 @@ body,
   font-weight: 400 !important;
   @apply truncate
 }
+

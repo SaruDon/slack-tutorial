@@ -118,7 +118,6 @@ export const create = mutation({
     await ctx.db.insert("members", { userId, workspaceId, role: "admin" })
 
     const workspace = await ctx.db.get(workspaceId)
-    console.log('workSpace', workspace)
 
     await ctx.db.insert("channels", {
       name: "general",
@@ -216,7 +215,6 @@ export const update = mutation({
     // if (!member || member.role !== "admin") {
     //   throw new Error("Unauthorized")
     // }
-    console.log('member', member)
 
     if (!member) {
       console.log('member', member)

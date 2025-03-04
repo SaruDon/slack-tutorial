@@ -28,7 +28,6 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
   const [error, setError] = useState("");
 
   const handleProviderSignIn = (value: "github" | "google") => {
-    console.log("Signing in with:", value);
     signIn(value);
   };
 

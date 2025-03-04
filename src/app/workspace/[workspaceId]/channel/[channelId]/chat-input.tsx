@@ -73,8 +73,6 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
         values.image = storageId; // Associate the image with the message
       }
 
-      console.log("values", { values });
-
       // Step 4: Create the message with the uploaded image (if any)
       await createMessage(values, {
         throwError: true, // Ensure errors are thrown

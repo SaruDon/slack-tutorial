@@ -31,7 +31,6 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
   const [isPasswordMatching, setIsPasswordMatching] = useState(true);
 
   const handleProviderSignUp = (value: "github" | "google") => {
-    console.log("Signing in with:", value);
     signIn(value);
   };
 
