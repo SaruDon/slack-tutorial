@@ -6,6 +6,7 @@ import { Hint } from "./hint";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Span } from "next/dist/trace";
 import { Thumbnail } from "./thumbnail";
+import { Toolbar } from "./toolbar";
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 
@@ -27,7 +28,7 @@ interface MessageProps {
   updatedAt: Doc<"messages">["updatedAt"];
   isEditing: boolean;
   isCompact?: boolean;
-  setEditng: (id: Id<"messages">) => void;
+  setEditngId: (id: Id<"messages">) => void;
   hideThreadButton?: boolean;
   threadCount?: number;
   thredImage?: string;
@@ -53,7 +54,7 @@ export const Message = ({
   updatedAt,
   isEditing,
   isCompact,
-  setEditng,
+  setEditngId,
   hideThreadButton,
   threadCount,
   thredImage,
@@ -86,35 +87,50 @@ export const Message = ({
 
   return (
     <div className="flex flex-col gap-2 p-1.5  hover:bg-gray-100/60 group relative">
-      <div className="flex items-start gap-2">
-        <button>
-          <Avatar className="rounded-md">
-            <AvatarImage className="size-10 rounded-full" src={authorImage} />
-            <AvatarFallback className="bg-sky-500 px-3 rounded-full text-[32px] text-white">
-              {avatarFallback}
-            </AvatarFallback>
-          </Avatar>
-        </button>
-        <div className="flex flex-col  overflow-hidden">
-          <div className="text-l">
-            <button
-              onClick={() => {}}
-              className="font-bold text-primary hover:underline"
-            >
-              {authorName}
-            </button>
-            <span>&nbsp; &nbsp;</span>
-            <Hint label={formatFullTime(new Date(createdAt))}>
-              <button className="text-xs text-muted-foreground hover:underline">
-                {format(new Date(createdAt), "h:mm a")}
+      <div className="flex items-center justify-between">
+        <div className="flex items-start gap-2">
+          <button>
+            <Avatar className="rounded-md">
+              <AvatarImage className="size-10 rounded-full" src={authorImage} />
+              <AvatarFallback className="bg-sky-500 px-3 rounded-full text-[32px] text-white">
+                {avatarFallback}
+              </AvatarFallback>
+            </Avatar>
+          </button>
+          <div className="flex flex-col  overflow-hidden">
+            <div className="text-l">
+              <button
+                onClick={() => {}}
+                className="font-bold text-primary hover:underline"
+              >
+                {authorName}
               </button>
-            </Hint>
+              <span>&nbsp; &nbsp;</span>
+              <Hint label={formatFullTime(new Date(createdAt))}>
+                <button className="text-xs text-muted-foreground hover:underline">
+                  {format(new Date(createdAt), "h:mm a")}
+                </button>
+              </Hint>
+            </div>
+            <Renderer value={body} />
+            <Thumbnail url={image} />
+            {updatedAt ? (
+              <span className="text-xs text-muted-foreground">(edited)</span>
+            ) : null}
           </div>
-          <Renderer value={body} />
-          <Thumbnail url={image} />
-          {updatedAt ? (
-            <span className="text-xs text-muted-foreground">(edited)</span>
-          ) : null}
+        </div>
+        <div>
+          {!isEditing && (
+            <Toolbar
+              isAuthor={isAuthor}
+              isPending={false}
+              handleEdit={() => setEditngId(id)}
+              handleThread={() => {}}
+              handleDelete={() => {}}
+              hideThreadButton={hideThreadButton}
+              handleReactions={() => {}}
+            />
+          )}
         </div>
       </div>
     </div>
