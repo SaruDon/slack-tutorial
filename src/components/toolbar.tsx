@@ -24,7 +24,7 @@ export const Toolbar = ({
 }: ToolbarPorps) => {
   return (
     <div className="absoulte top-0 right-5">
-      <div className="group-hover:opacity-100  opacity-0 transition-opacity bg-white border  rounded-md shadow-sm">
+      <div className="group group-hover:opacity-100 flex  opacity-0 transition-opacity bg-white border  rounded-md shadow-sm">
         {!hideThreadButton && (
           <Hint label="Reply in Thread">
             <Button
@@ -67,8 +67,13 @@ export const Toolbar = ({
         )}
         {isAuthor && (
           <Hint label="Delete Message">
-            <Button variant="ghost" size="iconSm" disabled={isPending}>
-              <Trash onClick={handleDelete} className="size-4" />
+            <Button
+              onClick={handleDelete}
+              variant="ghost"
+              size="iconSm"
+              disabled={isPending}
+            >
+              <Trash className="size-4" />
             </Button>
           </Hint>
         )}

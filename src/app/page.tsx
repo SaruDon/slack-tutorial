@@ -7,6 +7,7 @@ import { useMemo } from "react";
 import { useEffect } from "react";
 import { useCreateWorkSpaceModal } from "@/features/workspaces/store/use-create-workspace-modal";
 import { useRouter } from "next/navigation";
+import { Loader } from "lucide-react";
 
 export default function Home() {
   const router = useRouter();
@@ -25,9 +26,16 @@ export default function Home() {
       router.replace(`/workspace/${workSpaceId}`);
     } else if (!open) {
       setOpen(true);
-      console.log("Open creation model");
     }
   }, [workSpaceId, isLoading, open, setOpen, router]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="size-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   return <div></div>;
 }
