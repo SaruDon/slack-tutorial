@@ -12,6 +12,8 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useRemoveMessage } from "@/features/messages/api/use-remove-message";
 import { useConfirm } from "@/hooks/use-confirm";
+import { useToggleReactions } from "@/features/reactions/api/use-toggle-reaction";
+import { Reactions } from "./reaction";
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
@@ -79,6 +81,8 @@ export const Message = ({
   const { mutate: removeMessage, isPending: isRemoveMessagePending } =
     useRemoveMessage();
 
+  const { mutate: toggle, isPending: isReactionPending } = useToggleReactions();
+
   const isPending = isUpdatingMessage;
 
   const handleUpdateMessage = ({ body }: { body: string }) => {
@@ -111,6 +115,21 @@ export const Message = ({
         },
         onError: () => {
           toast.error("Message Deleted Successfully");
+        },
+      }
+    );
+  };
+
+  const handleToggleReaction = async (value: string) => {
+    console.log("messageId", id);
+    toggle(
+      {
+        messageId: id,
+        value,
+      },
+      {
+        onError: () => {
+          toast.error("Failed to add reaction");
         },
       }
     );
@@ -156,6 +175,7 @@ export const Message = ({
                       (edited)
                     </span>
                   ) : null}
+                  <Reactions data={reactions} onChange={handleToggleReaction} />
                 </div>
               </div>
             )}
@@ -168,7 +188,7 @@ export const Message = ({
                   handleThread={() => {}}
                   handleDelete={handleRemoveMessage}
                   hideThreadButton={hideThreadButton}
-                  handleReactions={() => {}}
+                  handleReactions={handleToggleReaction}
                 />
               )}
             </div>
@@ -236,6 +256,7 @@ export const Message = ({
                     (edited)
                   </span>
                 ) : null}
+                <Reactions data={reactions} onChange={handleToggleReaction} />
               </div>
             )}
           </div>
@@ -248,7 +269,7 @@ export const Message = ({
                 handleThread={() => {}}
                 handleDelete={handleRemoveMessage}
                 hideThreadButton={hideThreadButton}
-                handleReactions={() => {}}
+                handleReactions={handleToggleReaction}
               />
             )}
           </div>
