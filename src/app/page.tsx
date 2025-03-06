@@ -23,7 +23,6 @@ export default function Home() {
     }
     if (workSpaceId) {
       router.replace(`/workspace/${workSpaceId}`);
-      console.log("redirecting to workspace", workSpaceId);
     } else if (!open) {
       setOpen(true);
       console.log("Open creation model");

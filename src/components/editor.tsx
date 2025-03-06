@@ -1,4 +1,5 @@
 import Quill, { Delta, Op, QuillOptions } from "quill";
+import Image from "next/image";
 import "quill/dist/quill.snow.css";
 import {
   MutableRefObject,
@@ -9,10 +10,12 @@ import {
 } from "react";
 import { Button } from "./ui/button";
 import { PiTextAa } from "react-icons/pi";
-import { ImageIcon, Keyboard, Smile } from "lucide-react";
+import { ImageIcon, Keyboard, Smile, XIcon } from "lucide-react";
 import { MdSend } from "react-icons/md";
 import { Hint } from "./hint";
 import { current } from "../../convex/members";
+import { cn } from "@/lib/utils";
+import { EmojiPopover } from "./emoji-popover";
 
 type EditorValue = {
   image: File | null;
@@ -39,6 +42,7 @@ const Editor = ({
   innerRef,
 }: EditorProps) => {
   const [text, setText] = useState("");
+  const [image, setImage] = useState<File | null>(null);
   const [isToolbarVisible, setIsToolbarVisible] = useState(true);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,6 +51,7 @@ const Editor = ({
   const quilRef = useRef<Quill | null>(null);
   const defaultValueRef = useRef(defaultValue);
   const disabledRef = useRef(disabled);
+  const imageElementRef = useRef<HTMLInputElement>(null);
 
   useLayoutEffect(() => {
     submitRef.current = onSubmit;
@@ -78,8 +83,17 @@ const Editor = ({
             enter: {
               key: "Enter",
               handler: () => {
-                //Todo submit form
-                return;
+                const text = quill.getText();
+                const addedImage = imageElementRef.current?.files?.[0] || null;
+                const isEmpty =
+                  !addedImage &&
+                  text.replace(/<(.|\n)*?>/g, "").trim().length === 0;
+
+                if (isEmpty) {
+                  return;
+                }
+                const body = JSON.stringify(quill.getContents());
+                submitRef.current?.({ body, image: addedImage });
               },
             },
             shift_enter: {
@@ -131,12 +145,52 @@ const Editor = ({
     }
   };
 
-  const isEmpty = text.replace(/<(.|\n)*?>/g, "").trim().length === 0;
+  const onEmojiSelect = (emoji: any) => {
+    const quill = quilRef.current;
+    quill?.insertText(quill?.getSelection()?.index || 0, emoji.native);
+  };
+
+  const isEmpty = !image && text.replace(/<(.|\n)*?>/g, "").trim().length === 0;
 
   return (
     <div className="flex flex-col">
-      <div className="flex flex-col border border-slate-200 rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition bg-white">
+      <input
+        type="file"
+        accept="image/*"
+        ref={imageElementRef}
+        onChange={(event) => {
+          setImage(event.target.files![0]);
+        }}
+        className="hidden"
+      />
+      <div
+        className={cn(
+          "flex flex-col border border-slate-200 rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition bg-white",
+          disabled && "opacity-35"
+        )}
+      >
         <div ref={containerRef} className="ql-custom" />
+        {!!image && (
+          <div className="p-2">
+            <div className="relative size-[62px] flex itmes-center justify-center group/image">
+              <button
+                onClick={() => {
+                  setImage(null);
+                  imageElementRef.current!.value = "";
+                }}
+                className="bg-gray-800 rounded-full hidden group-hover/image:flex hover:bg-gray-900 absolute -top-2.5 -right-2.5 text-white size-6 z-[4] border-2 border-white items-center justify-center"
+              >
+                <XIcon className="size-3.5" />
+              </button>
+              <Image
+                src={URL.createObjectURL(image)}
+                alt="Updated Image"
+                fill
+                className="rounded-xl overflow-hidden border object-cover"
+              />
+            </div>
+          </div>
+        )}
         <div className="flex-2  px-2 pb-2 z-[5]">
           <div className="flex items-center justify-between">
             <div>
@@ -154,23 +208,18 @@ const Editor = ({
                   <PiTextAa />
                 </Button>
               </Hint>
-              <Hint label="Emojis">
-                <Button
-                  disabled={disabled}
-                  size="iconSm"
-                  variant="ghost"
-                  onClick={() => {}}
-                >
+              <EmojiPopover onEmojiSelect={onEmojiSelect}>
+                <Button disabled={disabled} size="iconSm" variant="ghost">
                   <Smile />
                 </Button>
-              </Hint>
+              </EmojiPopover>
               {variant === "create" && (
                 <Hint label="Attach image">
                   <Button
                     disabled={disabled}
                     size="iconSm"
                     variant="ghost"
-                    onClick={() => {}}
+                    onClick={() => imageElementRef?.current?.click()}
                   >
                     <ImageIcon />
                   </Button>
@@ -184,14 +233,19 @@ const Editor = ({
                     variant="outline"
                     size="sm"
                     disabled={disabled}
-                    onClick={() => {}}
+                    onClick={onCancel}
                   >
                     Cancel
                   </Button>
                   <Button
                     size="sm"
                     disabled={disabled}
-                    onClick={() => {}}
+                    onClick={() => {
+                      onSubmit({
+                        body: JSON.stringify(quilRef.current?.getContents()),
+                        image,
+                      });
+                    }}
                     className="bg-[#007a5a] hover:bg-[#007a5a]/80 text-white"
                   >
                     Save
@@ -201,7 +255,12 @@ const Editor = ({
               {variant === "create" && (
                 <Button
                   disabled={isEmpty || disabled}
-                  onClick={() => {}}
+                  onClick={() => {
+                    onSubmit({
+                      body: JSON.stringify(quilRef.current?.getContents()),
+                      image,
+                    });
+                  }}
                   className="ml-auto bg-[#007a5a] hover:bg-[#007a5a]/80 text-white"
                 >
                   <MdSend className="size-4" />
@@ -211,11 +270,18 @@ const Editor = ({
           </div>
         </div>
       </div>
-      <div className="p-2 text-sm text-muted-foreground flex justify-end">
-        <p>
-          <strong>Shift + Return</strong> to add new line
-        </p>
-      </div>
+      {variant === "create" && (
+        <div
+          className={cn(
+            "p-2 text-sm text-muted-foreground flex justify-end opacity-0",
+            !isEmpty && "opacity-100"
+          )}
+        >
+          <p>
+            <strong>Shift + Return</strong> to add new line
+          </p>
+        </div>
+      )}
     </div>
   );
 };

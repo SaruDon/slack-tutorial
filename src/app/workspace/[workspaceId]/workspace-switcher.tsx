@@ -25,7 +25,6 @@ export const WorkspaceSwitcher = () => {
   });
   const { data: workspaces, isLoading: workspacesLoading } = useGetWorkSpaces();
 
-  console.log("workspaces", workspaces);
   const filteredWorkspaces = workspaces?.filter(
     (workspace) => workspace?._id !== workspaceId
   );

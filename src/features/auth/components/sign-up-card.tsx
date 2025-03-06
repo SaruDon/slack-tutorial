@@ -31,7 +31,6 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
   const [isPasswordMatching, setIsPasswordMatching] = useState(true);
 
   const handleProviderSignUp = (value: "github" | "google") => {
-    console.log("Signing in with:", value);
     signIn(value);
   };
 
@@ -48,7 +47,7 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
   };
 
   return (
-    <Card className="h-full w-full p-8">
+    <Card className="w-full p-4 md:p-6 lg:p-8">
       <CardHeader className="flex items-start justify-between px-0 pt-0">
         <CardTitle className="text-2xl">Sign up to continue</CardTitle>
         <CardDescription>Use Your email or another service</CardDescription>

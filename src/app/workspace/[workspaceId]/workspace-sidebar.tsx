@@ -56,12 +56,12 @@ export const WorkspaceSidebar = () => {
   }
 
   return (
-    <div className="flex flex-col bg-[#5e2c5f] h-full">
+    <div className="flex pb-10 flex-col bg-[#5e2c5f] h-full">
       <WorkspaceHeader
         workspace={workspace}
         isAdmin={member.role === "admin"}
       />
-      <div className="flex flex-col m-t-3 px-2">
+      <div className="flex flex-col mt-3 px-2">
         <SidebarItem label="Threads" icon={MessageSquareText} id="threads" />
         <SidebarItem
           label="Dafts & Sent"
@@ -69,38 +69,48 @@ export const WorkspaceSidebar = () => {
           id="threads"
         />
       </div>
-      <WorkspaceSection
-        label="Channels"
-        hint="New Channel"
-        onNew={member.role === "admin" ? () => setOpen(true) : undefined}
+      <div
+        className="flex-1 overflow-y-auto
+      [&::-webkit-scrollbar]:w-2
+        [&::-webkit-scrollbar-track]:bg-[#4a235a]
+        [&::-webkit-scrollbar-thumb]:bg-[#6d3d6e]
+        [&::-webkit-scrollbar-thumb]:rounded-full
+        hover:[&::-webkit-scrollbar-thumb]:bg-[#7e4e7f]
+        scrollbar-color-[#6d3d6e_#4a235a]"
       >
-        {channels?.map((item) => (
-          <SidebarItem
-            key={item._id.toString()}
-            label={item.name}
-            icon={HashIcon}
-            id={item._id.toString()}
-            variant={channelId === item._id ? "active" : "default"}
-          />
-        ))}
-      </WorkspaceSection>
-
-      <WorkspaceSection
-        label="Direct Message"
-        hint="New Message"
-        onNew={() => console.log("New Channel Clicked")}
-      >
-        {members?.map((item) => (
-          <div key={item._id}>
-            <UserItem
-              key={item._id}
-              id={item._id}
-              label={item.user.name}
-              image={item.user.image}
+        <WorkspaceSection
+          label="Channels"
+          hint="New Channel"
+          onNew={member.role === "admin" ? () => setOpen(true) : undefined}
+        >
+          {channels?.map((item) => (
+            <SidebarItem
+              key={item._id.toString()}
+              label={item.name}
+              icon={HashIcon}
+              id={item._id.toString()}
+              variant={channelId === item._id ? "active" : "default"}
             />
-          </div>
-        ))}
-      </WorkspaceSection>
+          ))}
+        </WorkspaceSection>
+
+        <WorkspaceSection
+          label="Direct Message"
+          hint="New Message"
+          onNew={() => console.log("New Channel Clicked")}
+        >
+          {members?.map((item) => (
+            <div key={item._id}>
+              <UserItem
+                key={item._id}
+                id={item._id}
+                label={item.user.name}
+                image={item.user.image}
+              />
+            </div>
+          ))}
+        </WorkspaceSection>
+      </div>
     </div>
   );
 };
