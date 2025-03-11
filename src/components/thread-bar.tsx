@@ -17,10 +17,10 @@ export const ThreadBar = ({
   onClick,
   name = "Member",
 }: ThreadBarProps) => {
-  console.log("count ", count);
-  console.log("image ", image);
-  console.log("timeStamp", timeStamp);
-  if (!count || !image || !timeStamp) {
+  // console.log("count", count);
+  // console.log("image", image);
+  // console.log("timesSamp", timeStamp);
+  if (!count || !timeStamp) {
     return null;
   }
 
@@ -34,8 +34,8 @@ export const ThreadBar = ({
       >
         <div className="flex items-center gap-2 overflow-hidden">
           <Avatar className="size-5 rounded-md mr-1">
-            <AvatarImage className="rounded-md" src={image} />
-            <AvatarFallback className="bg-sky-500 p-2 rounded-full text-white">
+            <AvatarImage className="size-5 rounded-md" src={image} />
+            <AvatarFallback className="size-5 bg-sky-500 rounded-md text-white flex items-center justify-center text-xs">
               {avatarFallback}
             </AvatarFallback>
           </Avatar>

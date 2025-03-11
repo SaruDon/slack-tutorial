@@ -152,7 +152,7 @@ export const Message = ({
         <ConfirmDialog />
         <div
           className={cn(
-            "flex flex-col gap-2 p-1.5  hover:bg-gray-100/60 group relative",
+            "flex flex-col gap-2 p-1.5 px-4 hover:bg-gray-100/60 group relative",
             isEditing && "bg-[#f2c74433] hover:bg-[#f2c74433]",
             isRemoveMessagePending &&
               "bg-rose-500/50 transform transition-all scale-y-0 origin-bottom duration-200"
@@ -233,7 +233,7 @@ export const Message = ({
                   className="size-10 rounded-full"
                   src={authorImage}
                 />
-                <AvatarFallback className="bg-sky-500 px-1 rounded-full text-[27px] text-white">
+                <AvatarFallback className="size-10 bg-sky-500 rounded-full flex items-center justify-center text-[27px] text-white">
                   {avatarFallback}
                 </AvatarFallback>
               </Avatar>
