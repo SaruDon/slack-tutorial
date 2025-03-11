@@ -72,9 +72,9 @@ export const Message = ({
   threadTimestamp,
   threadName,
 }: MessageProps) => {
-  const { parentMessageId, onOpenMessage, onClose } = usePanel();
+  const { parentMessageId, onOpenMessage, onOpenProfile, onClose } = usePanel();
 
-  const avatarFallback = authorName.charAt(0).toLowerCase();
+  const avatarFallback = authorName.charAt(0).toUpperCase();
 
   const [ConfirmDialog, confirm] = useConfirm(
     "Delete message",
@@ -89,7 +89,7 @@ export const Message = ({
 
   const { mutate: toggle, isPending: isReactionPending } = useToggleReactions();
 
-  const isPending = isUpdatingMessage;
+  const isPending = isUpdatingMessage || isReactionPending;
 
   const handleUpdateMessage = ({ body }: { body: string }) => {
     updateMessage(
@@ -227,13 +227,13 @@ export const Message = ({
       >
         <div className="flex items-center justify-between">
           <div className="flex items-start gap-2 w-full ">
-            <button>
+            <button onClick={() => onOpenProfile(memberId)}>
               <Avatar className="rounded-md">
                 <AvatarImage
                   className="size-10 rounded-full"
                   src={authorImage}
                 />
-                <AvatarFallback className="bg-sky-500 px-3 rounded-full text-[32px] text-white">
+                <AvatarFallback className="bg-sky-500 px-1 rounded-full text-[27px] text-white">
                   {avatarFallback}
                 </AvatarFallback>
               </Avatar>
@@ -253,7 +253,7 @@ export const Message = ({
               <div className="flex flex-col w-full  overflow-hidden">
                 <div className="text-l">
                   <button
-                    onClick={() => {}}
+                    onClick={() => onOpenProfile(memberId)}
                     className="font-bold text-primary hover:underline"
                   >
                     {authorName}

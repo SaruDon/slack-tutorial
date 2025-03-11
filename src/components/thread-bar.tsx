@@ -24,7 +24,7 @@ export const ThreadBar = ({
     return null;
   }
 
-  const avatarFallback = name?.charAt(0).toLowerCase();
+  const avatarFallback = name?.charAt(0).toUpperCase();
 
   return (
     <div>
