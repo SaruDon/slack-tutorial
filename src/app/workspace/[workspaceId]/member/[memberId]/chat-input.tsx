@@ -11,7 +11,7 @@ import { Id } from "../../../../../../convex/_generated/dataModel";
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
 type CreateMessageValues = {
-  channelId: Id<"channels">;
+  conversationId: Id<"conversations">;
   workspaceId: Id<"workspaces">;
   body: string;
   image?: Id<"_storage"> | undefined;
@@ -19,16 +19,16 @@ type CreateMessageValues = {
 
 interface ChatInputProps {
   placeholder: string;
+  conversationId: Id<"conversations">;
 }
 
-export const ChatInput = ({ placeholder }: ChatInputProps) => {
+export const ChatInput = ({ placeholder, conversationId }: ChatInputProps) => {
   const editorRef = useRef<Quill | null>(null);
   const [isPending, setIsPending] = useState(false);
 
   const [editorKey, setEditorKey] = useState(0);
 
   const workspaceId = useWorkspaceId();
-  const channelId = useChannelId();
   const { mutate: createMessage } = useCreateMessage();
 
   const { mutate: generateUrl } = useGenerateUploadUrl();
@@ -45,7 +45,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
       editorRef.current?.enable(false); // Disable the editor during upload
 
       const values: CreateMessageValues = {
-        channelId,
+        conversationId,
         workspaceId,
         body,
         image: undefined, // Initialize image as undefined

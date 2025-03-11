@@ -16,6 +16,7 @@ import { useState } from "react";
 import { Id } from "../../convex/_generated/dataModel";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { useCurrentMember } from "@/features/members/api/use-current-members";
+import { Loader } from "lucide-react";
 
 const TIME_BOUND = 2;
 
@@ -88,7 +89,7 @@ export const MessageList = ({
   );
 
   return (
-    <div className="flex flex-col-reverse pl-5 flex-1 overflow-y-auto messsage-scrollbar">
+    <div className="flex flex-col-reverse pl-5 flex-1 overflow-y-auto message-scrollbar">
       {Object.entries(groupedMessages || {}).map(([dateKey, messages]) => (
         <div key={dateKey}>
           <div className="text-center my-2 relative">
@@ -108,6 +109,8 @@ export const MessageList = ({
                 new Date(previousMessage._creationTime)
               ) < TIME_BOUND;
 
+            console.log("message", message);
+
             return (
               <Message
                 key={message._id}
@@ -122,17 +125,46 @@ export const MessageList = ({
                 updatedAt={message.updatedAt}
                 createdAt={message._creationTime}
                 isEditing={editingId === message._id}
-                setEditngId={setEditingId}
+                setEditing={setEditingId}
                 isCompact={isCompact}
                 hideThreadButton={variant === "thread"}
                 threadCount={message.threadCount}
-                thredImage={message.threadImage}
-                thredTimestamp={message.threadTimestamp}
+                threadImage={message.threadImage}
+                threadTimestamp={message.threadTimestamp}
+                threadName={message.threadName}
               />
             );
           })}
         </div>
       ))}
+      <div
+        className="h-1"
+        ref={(el) => {
+          if (el) {
+            const observer = new IntersectionObserver(
+              ([entry]) => {
+                if (entry.isIntersecting && canLoadMore) {
+                  loadMore();
+                }
+              },
+              {
+                threshold: 1.0,
+              }
+            );
+            observer.observe(el);
+            return () => observer.disconnect();
+          }
+        }}
+      />
+
+      {isLoadingMore && (
+        <div className="text-center my-2 relative">
+          <hr className="absolute top-1/2 left-0 right-0 border-t border-grey-300" />
+          <span className="relative inline-block bg-white px-4 py-1 rounded-full text-xs border border-grey-300">
+            <Loader className="size-4 animate-spin" />
+          </span>
+        </div>
+      )}
       {variant == "channel" && channelName && channelCreationTime && (
         <ChannelHero name={channelName} creationTime={channelCreationTime} />
       )}

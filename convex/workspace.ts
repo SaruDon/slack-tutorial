@@ -104,7 +104,7 @@ export const create = mutation({
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx)
     if (!userId) {
-      throw new Error("user not Loggedin")
+      throw new Error("user not Logged")
     }
 
     const joinCode = generateCode();
@@ -140,12 +140,12 @@ export const getById = query({
     }
 
 
-    const memeber = await ctx.db
+    const member = await ctx.db
       .query("members")
       .withIndex("by_workspace_id_user_id", (q) => q.eq("workspaceId", args.id).eq("userId", userId))
       .unique
 
-    if (!memeber) {
+    if (!member) {
       return null
     }
 
@@ -160,35 +160,42 @@ export const getById = query({
 });
 
 
-// Define a query named 'get' which will be used to fetch data from the database
+// gets all workspaces user is part of
 export const get = query({
-  // Specify the arguments required for this query, but in this case, it is an empty object
   args: {},
 
-  // Define the handler function that will execute when the query is invoked
   handler: async (ctx) => {
-    // Use the database context 'ctx' to query the "workspaces" collection and collect all documents from it
-    const userId = await auth.getUserId(ctx)
+    const userId = await auth.getUserId(ctx);
+
+    // If the user ID is not found, return an empty array
     if (!userId) {
       return [];
     }
 
+    // Query the database to find all members associated with the user ID
     const members = await ctx.db
       .query("members")
       .withIndex("by_user_id", (q) => q.eq("userId", userId))
-      .collect()
+      .collect();
 
-    const workspaceIds = members.map((member) => member.workspaceId)
+    // Extract the workspace IDs from the members
+    const workspaceIds = members.map((member) => member.workspaceId);
 
-    const workspaces = []
+    // Initialize an empty array to hold the workspaces
+    const workspaces = [];
 
+    // Iterate over each workspace ID
     for (const workspaceId of workspaceIds) {
-      const workspace = await ctx.db.get(workspaceId)
+      // Fetch the workspace from the database
+      const workspace = await ctx.db.get(workspaceId);
+
+      // If the workspace exists, add it to the workspaces array
       if (workspace) {
-        workspaces.push(workspace)
+        workspaces.push(workspace);
       }
     }
 
+    // Return the array of workspaces
     return workspaces;
   }
 });
@@ -217,7 +224,6 @@ export const update = mutation({
     // }
 
     if (!member) {
-      console.log('member', member)
       throw new Error("Unauthorized")
     }
     await ctx.db.patch(args.id, {
@@ -253,15 +259,36 @@ export const remove = mutation({
       throw new Error("Unauthorized")
     }
 
-    const [members] = await Promise.all([
+    const [members, channels, messages, reactions] = await Promise.all([
       ctx.db
         .query("members")
+        .withIndex("by_workspace_id", (q) => q.eq("workspaceId", args.id))
+        .collect(),
+      ctx.db
+        .query("channels")
+        .withIndex("by_workspace_id", (q) => q.eq("workspaceId", args.id))
+        .collect(),
+      ctx.db
+        .query("messages")
+        .withIndex("by_workspace_id", (q) => q.eq("workspaceId", args.id))
+        .collect(),
+      ctx.db
+        .query("reactions")
         .withIndex("by_workspace_id", (q) => q.eq("workspaceId", args.id))
         .collect()
     ])
 
     for (const member of members) { //delete all members of that channel and then that channel
       await ctx.db.delete(member._id)
+    }
+    for (const channel of channels) {
+      await ctx.db.delete(channel._id)
+    }
+    for (const message of messages) {
+      await ctx.db.delete(message._id)
+    }
+    for (const reaction of reactions) {
+      await ctx.db.delete(reaction._id)
     }
 
     await ctx.db.delete(args.id); //delete workspace 
