@@ -3,7 +3,6 @@ import { useMutation } from "convex/react";
 import { useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { useCallback } from "react";
-import { Id } from "../../../../convex/_generated/dataModel";
 import { useMemo } from "react";
 
 
@@ -28,7 +27,6 @@ export const useGenerateUploadUrl = () => {
   const isPending = useMemo(() => status === "pending", [status])
   const isSuccess = useMemo(() => status === "success", [status])
   const isError = useMemo(() => status === "error", [status])
-  const isSettled = useMemo(() => status === "settled", [status])
 
 
   const mutation = useMutation(api.upload.generateUploadUrl)

@@ -30,7 +30,6 @@ export const useRemoveMember = () => {
   const isPending = useMemo(() => status === "pending", [status])
   const isSuccess = useMemo(() => status === "success", [status])
   const isError = useMemo(() => status === "error", [status])
-  const isSettled = useMemo(() => status === "settled", [status])
 
 
   const mutation = useMutation(api.members.remove)
