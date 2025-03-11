@@ -16,7 +16,7 @@ export const useConfirm = (
   const [promise, setPromise] = useState<{
     resolve: (value: boolean) => void;
   } | null>(null);
-  const [open, setOpen] = useState(false);
+  const [_open, setOpen] = useState(false);
 
   const confirm = () =>
     new Promise<boolean>((resolve) => {

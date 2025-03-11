@@ -5,10 +5,8 @@ import { useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { useCreateWorkSpaceModal } from "../store/use-create-workspace-modal";
 import { Input } from "@/components/ui/input";
@@ -23,8 +21,7 @@ export const CreateWorkSpaceModal = () => {
   const [open, setOpen] = useCreateWorkSpaceModal();
   const [name, setName] = useState("");
 
-  const { mutate, isPending, isError, isSuccess, data, error } =
-    useCreateWorkspace();
+  const { mutate, isPending } = useCreateWorkspace();
 
   const handleClose = () => {
     setOpen(false);
