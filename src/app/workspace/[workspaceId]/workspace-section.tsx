@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 interface WorkSpaceSectionProps {
   children: React.ReactNode;
-  label: String;
+  label: string;
   hint: string;
   onNew?: () => void;
 }

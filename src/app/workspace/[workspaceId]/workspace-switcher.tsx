@@ -2,8 +2,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -18,12 +16,12 @@ import { Plus } from "lucide-react";
 export const WorkspaceSwitcher = () => {
   const workspaceId = useWorkspaceId();
   const router = useRouter();
-  const [open, setOpen] = useCreateWorkSpaceModal();
+  const [_open, setOpen] = useCreateWorkSpaceModal();
 
   const { data: workspace, isLoading: workspaceLoading } = useGetWorkSpace({
     id: workspaceId,
   });
-  const { data: workspaces, isLoading: workspacesLoading } = useGetWorkSpaces();
+  const { data: workspaces } = useGetWorkSpaces();
 
   const filteredWorkspaces = workspaces?.filter(
     (workspace) => workspace?._id !== workspaceId

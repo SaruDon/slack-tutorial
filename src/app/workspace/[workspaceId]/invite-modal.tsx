@@ -6,7 +6,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { CopyIcon, RefreshCcw } from "lucide-react";
@@ -16,7 +15,7 @@ import { useConfirm } from "@/hooks/use-confirm";
 
 interface InviteModalProps {
   open: boolean;
-  setOpen: (opne: boolean) => void;
+  setOpen: (open: boolean) => void;
   name: string;
   joinCode: string;
 }

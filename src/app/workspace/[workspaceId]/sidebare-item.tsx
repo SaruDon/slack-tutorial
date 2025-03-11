@@ -5,7 +5,6 @@ import Link from "next/link";
 import { IconType } from "react-icons/lib";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import { useGetChannels } from "@/features/channels/api/use-get-channels";
 
 interface SidebarItemProps {
   label: string;

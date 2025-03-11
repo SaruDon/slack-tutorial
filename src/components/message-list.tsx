@@ -4,13 +4,11 @@ import { GetMessagesReturnType } from "@/features/messages/api/use-get-messages"
 import {
   differenceInMinutes,
   format,
-  isDate,
   isToday,
   isValid,
   isYesterday,
 } from "date-fns";
 import { Message } from "./message";
-import { log } from "console";
 import { ChannelHero } from "./channel-hero";
 import { useState } from "react";
 import { Id } from "../../convex/_generated/dataModel";

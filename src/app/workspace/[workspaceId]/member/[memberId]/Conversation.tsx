@@ -13,7 +13,7 @@ interface ConversationProps {
 }
 
 export const Conversations = ({ id }: ConversationProps) => {
-  const { onOpenProfile, onClose } = usePanel();
+  const { onOpenProfile } = usePanel();
 
   const memberId = useMemberId();
   const { data: member, isLoading: memberIsLoading } = useGetMember({

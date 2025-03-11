@@ -10,10 +10,9 @@ import {
 } from "react";
 import { Button } from "./ui/button";
 import { PiTextAa } from "react-icons/pi";
-import { ImageIcon, Keyboard, Smile, XIcon } from "lucide-react";
+import { ImageIcon, Smile, XIcon } from "lucide-react";
 import { MdSend } from "react-icons/md";
 import { Hint } from "./hint";
-import { current } from "../../convex/members";
 import { cn } from "@/lib/utils";
 import { EmojiPopover } from "./emoji-popover";
 
