@@ -89,7 +89,7 @@ export const MessageList = ({
   );
 
   return (
-    <div className="flex flex-col-reverse pl-5 flex-1 overflow-y-auto messsage-scrollbar">
+    <div className="flex flex-col-reverse pl-5 flex-1 overflow-y-auto message-scrollbar">
       {Object.entries(groupedMessages || {}).map(([dateKey, messages]) => (
         <div key={dateKey}>
           <div className="text-center my-2 relative">
@@ -123,12 +123,12 @@ export const MessageList = ({
                 updatedAt={message.updatedAt}
                 createdAt={message._creationTime}
                 isEditing={editingId === message._id}
-                setEditngId={setEditingId}
+                setEditing={setEditingId}
                 isCompact={isCompact}
                 hideThreadButton={variant === "thread"}
                 threadCount={message.threadCount}
-                thredImage={message.threadImage}
-                thredTimestamp={message.threadTimestamp}
+                threadImage={message.threadImage}
+                threadTimestamp={message.threadTimestamp}
               />
             );
           })}

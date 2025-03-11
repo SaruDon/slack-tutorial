@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { Hint } from "./hint";
 import { EmojiPopover } from "./emoji-popover";
 
-interface ToolbarPorps {
+interface ToolbarProps {
   isAuthor: boolean;
   isPending: boolean;
   handleEdit: () => void;
@@ -21,9 +21,9 @@ export const Toolbar = ({
   handleDelete,
   handleReactions,
   hideThreadButton,
-}: ToolbarPorps) => {
+}: ToolbarProps) => {
   return (
-    <div className="absoulte top-0 right-5">
+    <div className="absolute top-0 right-5">
       <div className="group group-hover:opacity-100 flex  opacity-0 transition-opacity bg-white border  rounded-md shadow-sm">
         {!hideThreadButton && (
           <Hint label="Reply in Thread">

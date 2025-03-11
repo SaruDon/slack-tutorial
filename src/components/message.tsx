@@ -14,6 +14,7 @@ import { useRemoveMessage } from "@/features/messages/api/use-remove-message";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useToggleReactions } from "@/features/reactions/api/use-toggle-reaction";
 import { Reactions } from "./reaction";
+import { usePanel } from "@/hooks/use-panel";
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
@@ -36,11 +37,11 @@ interface MessageProps {
   updatedAt: Doc<"messages">["updatedAt"];
   isEditing: boolean;
   isCompact?: boolean;
-  setEditngId: (id: Id<"messages"> | null) => void;
+  setEditing: (id: Id<"messages"> | null) => void;
   hideThreadButton?: boolean;
   threadCount?: number;
-  thredImage?: string;
-  thredTimestamp?: number | undefined;
+  threadImage?: string;
+  threadTimestamp?: number | undefined;
 }
 
 // format(date, "dd:m:yyyy:hh:mm:ss")
@@ -62,12 +63,14 @@ export const Message = ({
   updatedAt,
   isEditing,
   isCompact,
-  setEditngId,
+  setEditing,
   hideThreadButton,
   threadCount,
-  thredImage,
-  thredTimestamp,
+  threadImage,
+  threadTimestamp,
 }: MessageProps) => {
+  const { parentMessageId, onOpenMessage, onClose } = usePanel();
+
   const avatarFallback = authorName.charAt(0).toLowerCase();
 
   const [ConfirmDialog, confirm] = useConfirm(
@@ -75,7 +78,7 @@ export const Message = ({
     "Are you sure you want to delete this message this can not be undone"
   );
 
-  const { mutate: updateMessgae, isPending: isUpdatingMessage } =
+  const { mutate: updateMessage, isPending: isUpdatingMessage } =
     useUpdateMessage();
 
   const { mutate: removeMessage, isPending: isRemoveMessagePending } =
@@ -86,13 +89,13 @@ export const Message = ({
   const isPending = isUpdatingMessage;
 
   const handleUpdateMessage = ({ body }: { body: string }) => {
-    updateMessgae(
+    updateMessage(
       { id, body },
       {
         onSuccess: () => {
           toast.success("Message updated");
 
-          setEditngId(null);
+          setEditing(null);
         },
         onError: () => {
           toast.error("Failed to update");
@@ -111,6 +114,10 @@ export const Message = ({
       {
         onSuccess: () => {
           toast.success("Message Deleted Successfully");
+
+          if (parentMessageId === id) {
+            onClose();
+          }
           //Todo Close Thread if Open
         },
         onError: () => {
@@ -156,7 +163,7 @@ export const Message = ({
                   onSubmit={handleUpdateMessage}
                   disabled={isPending}
                   defaultValue={JSON.parse(body)}
-                  onCancel={() => setEditngId(null)}
+                  onCancel={() => setEditing(null)}
                   variant="update"
                 />
               </div>
@@ -184,8 +191,8 @@ export const Message = ({
                 <Toolbar
                   isAuthor={isAuthor}
                   isPending={false}
-                  handleEdit={() => setEditngId(id)}
-                  handleThread={() => {}}
+                  handleEdit={() => setEditing(id)}
+                  handleThread={() => onOpenMessage(id)}
                   handleDelete={handleRemoveMessage}
                   hideThreadButton={hideThreadButton}
                   handleReactions={handleToggleReaction}
@@ -229,7 +236,7 @@ export const Message = ({
                   onSubmit={handleUpdateMessage}
                   disabled={isPending}
                   defaultValue={JSON.parse(body)}
-                  onCancel={() => setEditngId(null)}
+                  onCancel={() => setEditing(null)}
                   variant="update"
                 />
               </div>
@@ -265,8 +272,8 @@ export const Message = ({
               <Toolbar
                 isAuthor={isAuthor}
                 isPending={isPending}
-                handleEdit={() => setEditngId(id)}
-                handleThread={() => {}}
+                handleEdit={() => setEditing(id)}
+                handleThread={() => onOpenMessage(id)}
                 handleDelete={handleRemoveMessage}
                 hideThreadButton={hideThreadButton}
                 handleReactions={handleToggleReaction}

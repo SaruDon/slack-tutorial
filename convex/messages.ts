@@ -1,3 +1,4 @@
+import { current } from './members';
 import { v } from "convex/values";
 import { mutation, query, QueryCtx } from "./_generated/server";
 import { auth } from "./auth";
@@ -98,7 +99,7 @@ export const get = query({
       .withIndex("by_channel_id_parent_message_id_conversation_id", (q) =>
         q
           .eq("channelId", args.channelId)
-          .eq("parentMessageId", args.parentMessageId)
+          .eq("parentMessageId", args.parentMessageId) //filter messages with parentId
           .eq("conversationId", args.conversationId))
       .order("desc")
       .paginate(args.paginationOpts)
@@ -219,11 +220,14 @@ export const create = mutation({
       image: args.image, // Image ID if present
       channelId: args.channelId, // Channel ID if present
       conversationId: _conversationId, // Conversation ID
-      parentMessageId: args.messageId, // Parent message ID if present
+      parentMessageId: args.parentMessageId, // Parent message ID if present
       workspaceId: args.workspaceId, // Workspace ID
       body: args.body, // Main content of the message
     })
+    // const createdMessage = await ctx.db.get(messageId);
 
+    // // Log the created message
+    // console.log("Created Message:", createdMessage);
     return messageId // Return the ID of the newly created message
   }
 })
@@ -288,3 +292,87 @@ export const remove = mutation({
     return args.id;
   }
 })
+
+export const getMessageById = query({
+  args: { messageId: v.id("messages") },
+  handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx)
+    if (!userId) {
+      return null;
+    }
+
+    const message = await ctx.db.get(args.messageId);
+    if (!message) {
+      return null
+    }
+
+    const member = await populateMember(ctx, message.memberId);
+    if (!member) {
+      return null;
+    }
+
+    const currentMember = await getMember(userId, ctx, message.workspaceId)
+
+    if (!currentMember) {
+      return null
+    }
+
+    const user = await populateUser(ctx, member.userId);
+    if (!user) {
+      return null
+    }
+    console.log('user', user)
+    const reactions = await populateReactions(ctx, message._id);
+
+    const reactionsWIthCounts = reactions.map((reaction) => {
+      return {
+        ...reaction,
+        count: reactions.filter((r) => r.value === reaction.value).length
+      }
+    })
+
+    // Reduce the reactionsWithCounts array to a new array with deduplicated reactions
+    const dedupedReaction = reactionsWIthCounts.reduce(
+      (acc, reaction) => {
+        // Find an existing reaction in the accumulator array that matches the current reaction's value
+        const exitingReaction = acc.find(
+          (r) => r.value === reaction.value
+        )
+
+        if (exitingReaction) {
+          // If an existing reaction is found, update its memberIds array
+          // by merging it with the current reaction's memberId
+          exitingReaction.memberIds = Array.from(
+            new Set([...exitingReaction.memberIds, reaction.memberId])
+          )
+        } else {
+          // If no existing reaction is found, add the current reaction to the accumulator array
+          // with its memberIds array initialized to contain the current reaction's memberId
+          acc.push({ ...reaction, memberIds: [reaction.memberId] })
+        }
+
+        // Return the updated accumulator array
+        return acc;
+      },
+      // Initialize the accumulator array as an empty array of the specified type
+      [] as (Doc<"reactions"> & {
+        count: number,
+        memberIds: Id<"members">[]
+      })[]
+    );
+
+
+    const reactionsWithoutMemberIdProperty = dedupedReaction.map(({ memberId, ...rest }) => rest)
+
+    return {
+      ...message,
+      image: message.image
+        ? await ctx.storage.getUrl(message.image)
+        : undefined,
+      user,
+      member,
+      reactions: reactionsWithoutMemberIdProperty
+    };
+  }
+})
+
