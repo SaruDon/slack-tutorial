@@ -16,7 +16,7 @@ const JoinPage = () => {
   const workspaceId = useWorkspaceId();
   const router = useRouter();
 
-  const { mutate, isPending } = useJoin();
+  const { mutate } = useJoin();
 
   const { data, isLoading } = useGetWorkSpaceInfo({ id: workspaceId });
 

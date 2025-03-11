@@ -1,26 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { FaChevronDown } from "react-icons/fa";
-import { toast } from "sonner";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { TrashIcon } from "lucide-react";
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { DialogClose } from "@radix-ui/react-dialog";
-import { useWorkspaceId } from "@/hooks/use-workspace-id";
-import { useUpdateChannel } from "@/features/channels/api/use-update-channel";
-import { useChannelId } from "@/hooks/use-channel-id";
-import { useRemoveChannel } from "@/features/channels/api/use-remove-channel";
-import { useConfirm } from "@/hooks/use-confirm";
-import { useRouter } from "next/navigation";
-import { useCurrentMember } from "@/features/members/api/use-current-members";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 
 interface HeaderProps {

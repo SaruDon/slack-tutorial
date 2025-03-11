@@ -8,7 +8,6 @@ import {
   MessageSquareText,
 } from "lucide-react";
 import { WorkspaceHeader } from "./workspace-header";
-import { Doc } from "../../../../convex/_generated/dataModel";
 import { SidebarItem } from "./sidebare-item";
 import { useGetChannels } from "@/features/channels/api/use-get-channels";
 import { WorkspaceSection } from "./workspace-section";
@@ -18,7 +17,6 @@ import { useCreateChannelModal } from "@/features/channels/store/use-create-chan
 
 import { useChannelId } from "@/hooks/use-channel-id";
 import { useMemberId } from "@/hooks/use-member-id";
-import { isHTTPMethod } from "next/dist/server/web/http";
 
 export const WorkspaceSidebar = () => {
   const memberId = useMemberId();
@@ -37,7 +35,7 @@ export const WorkspaceSidebar = () => {
     workspaceId,
   });
 
-  const { data: members, isLoading: membersIsLoading } = useGetMembers({
+  const { data: members } = useGetMembers({
     workspaceId,
   });
 

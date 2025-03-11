@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuthActions } from "@convex-dev/auth/react";
-import { UserButton } from "@/features/auth/components/user-button";
 import { useGetWorkSpaces } from "@/features/workspaces/api/use-get-workspaces";
 import { useMemo } from "react";
 import { useEffect } from "react";
@@ -12,7 +11,6 @@ import { Loader } from "lucide-react";
 export default function Home() {
   const router = useRouter();
 
-  const { signOut } = useAuthActions();
   const { data, isLoading } = useGetWorkSpaces();
   const workSpaceId = useMemo(() => data?.[0]?._id, [data]);
 

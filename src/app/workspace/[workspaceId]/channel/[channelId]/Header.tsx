@@ -36,8 +36,7 @@ export const Header = ({ title }: HeaderProps) => {
   const { mutate: updateChannel, isPending: isUpdatePending } =
     useUpdateChannel();
 
-  const { mutate: removeChannel, isPending: isRemovePending } =
-    useRemoveChannel();
+  const { mutate: removeChannel } = useRemoveChannel();
 
   const [ConfirmDialog, confirm] = useConfirm(
     "Delete this channel",
