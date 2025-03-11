@@ -92,7 +92,7 @@ export const Header = ({ title }: HeaderProps) => {
           toast.success("Channel updated");
         },
         onError: () => {
-          toast.error("Failed to upate channel");
+          toast.error("Failed to update channel");
         },
       }
     );

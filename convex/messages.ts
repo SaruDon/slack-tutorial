@@ -16,7 +16,8 @@ const populateThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
     return {
       count: 0,
       image: undefined,
-      timestamp: 0
+      timestamp: 0,
+      name: ""
     }
   }
   const lastMessage = messages[messages.length - 1]
@@ -25,7 +26,8 @@ const populateThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
     return {
       count: messages.length,
       image: undefined,
-      timestamp: 0
+      timestamp: 0,
+      name: ""
     }
   }
 
@@ -33,7 +35,8 @@ const populateThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
   return {
     count: messages.length,
     image: lastMessageUser?.image,
-    time: lastMessage?._creationTime
+    time: lastMessage?._creationTime,
+    name: lastMessageUser?.name
   }
 }
 
@@ -79,10 +82,10 @@ export const get = query({
       throw new Error("Unauthorized")
     }
 
-    let _conversationId = args.conversationId
-
+    let _conversationId = args.conversationId;
     // Handle the case where the message is a reply in a 1:1 conversation
     if (!args.channelId && !args.conversationId && args.parentMessageId) {
+
       const parentMessage = await ctx.db.get(args.parentMessageId)
       if (!parentMessage) {
         // Throw an error if the parent message is not found
@@ -100,7 +103,7 @@ export const get = query({
         q
           .eq("channelId", args.channelId)
           .eq("parentMessageId", args.parentMessageId) //filter messages with parentId
-          .eq("conversationId", args.conversationId))
+          .eq("conversationId", _conversationId))
       .order("desc")
       .paginate(args.paginationOpts)
 
@@ -170,7 +173,8 @@ export const get = query({
               reactions: reactionsWithoutMemberIdProperty,
               threadCount: thread.count,
               threadImage: thread.image,
-              threadTimestamp: thread.timestamp
+              threadTimestamp: thread.time,
+              threadName: thread.name
             }
           })
         )
@@ -321,7 +325,6 @@ export const getMessageById = query({
     if (!user) {
       return null
     }
-    console.log('user', user)
     const reactions = await populateReactions(ctx, message._id);
 
     const reactionsWIthCounts = reactions.map((reaction) => {

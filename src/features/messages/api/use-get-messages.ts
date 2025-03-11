@@ -13,6 +13,8 @@ interface UseGetMessagePros {
 export type GetMessagesReturnType = typeof api.messages.get._returnType["page"];
 
 export const useGetMessages = ({ channelId, parentMessageId, conversationId }: UseGetMessagePros) => {
+
+  console.log('parentMessageId Api', parentMessageId)
   const { results, status, loadMore } = usePaginatedQuery(
     api.messages.get,
     {

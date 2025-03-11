@@ -104,7 +104,7 @@ export const create = mutation({
   handler: async (ctx, args) => {
     const userId = await auth.getUserId(ctx)
     if (!userId) {
-      throw new Error("user not Loggedin")
+      throw new Error("user not Logged")
     }
 
     const joinCode = generateCode();
@@ -140,12 +140,12 @@ export const getById = query({
     }
 
 
-    const memeber = await ctx.db
+    const member = await ctx.db
       .query("members")
       .withIndex("by_workspace_id_user_id", (q) => q.eq("workspaceId", args.id).eq("userId", userId))
       .unique
 
-    if (!memeber) {
+    if (!member) {
       return null
     }
 
@@ -224,7 +224,6 @@ export const update = mutation({
     // }
 
     if (!member) {
-      console.log('member', member)
       throw new Error("Unauthorized")
     }
     await ctx.db.patch(args.id, {

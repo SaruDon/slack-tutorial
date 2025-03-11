@@ -42,13 +42,7 @@ export const toggle = mutation({
       )
       .first()
 
-    console.log("Querying with:", {
-      messageId: args.messageId,
-      memberId: member._id,
-      value: args.value,
-    });
 
-    console.log('existingMessageReactionFromUser', existingMessageReactionFromUser)
 
     if (existingMessageReactionFromUser) {
       await ctx.db.delete(existingMessageReactionFromUser._id)

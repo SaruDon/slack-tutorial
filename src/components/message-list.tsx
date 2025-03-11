@@ -109,6 +109,8 @@ export const MessageList = ({
                 new Date(previousMessage._creationTime)
               ) < TIME_BOUND;
 
+            console.log("message", message);
+
             return (
               <Message
                 key={message._id}
@@ -129,6 +131,7 @@ export const MessageList = ({
                 threadCount={message.threadCount}
                 threadImage={message.threadImage}
                 threadTimestamp={message.threadTimestamp}
+                threadName={message.threadName}
               />
             );
           })}

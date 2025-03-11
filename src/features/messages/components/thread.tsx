@@ -109,7 +109,6 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
     try {
       setIsPending(true); // Indicate that the operation is in progress
       editorRef.current?.enable(false); // Disable the editor during upload
-      console.log("messageId", messageId);
 
       const values: CreateMessageValues = {
         channelId,
@@ -118,7 +117,6 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
         body,
         image: undefined, // Initialize image as undefined
       };
-      console.log("values", values);
 
       if (image) {
         // Step 1: Generate a URL for uploading the image
@@ -232,6 +230,7 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
                   threadCount={message.threadCount}
                   threadImage={message.threadImage}
                   threadTimestamp={message.threadTimestamp}
+                  threadName={message.threadName}
                 />
               );
             })}
