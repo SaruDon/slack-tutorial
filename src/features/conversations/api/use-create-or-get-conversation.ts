@@ -1,10 +1,9 @@
-import { useMemberId } from '@/hooks/use-member-id';
 import { useMutation } from "convex/react";
 
 import { useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { useCallback } from "react";
-import { Doc, Id } from "../../../../convex/_generated/dataModel";
+import { Id } from "../../../../convex/_generated/dataModel";
 import { useMemo } from "react";
 
 

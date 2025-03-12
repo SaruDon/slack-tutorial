@@ -50,8 +50,6 @@ const formatDateLabel = (dateStr: string) => {
 };
 
 export const MessageList = ({
-  memberName,
-  memberImage,
   channelName,
   channelCreationTime,
   variant = "channel",

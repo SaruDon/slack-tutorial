@@ -47,7 +47,6 @@ const WorkspaceIdPage = () => {
   }, [
     channelId,
     isChannelLoading,
-    isChannelLoading,
     workspace,
     open,
     setOpen,
@@ -55,6 +54,8 @@ const WorkspaceIdPage = () => {
     isMemberLoading,
     member,
     isAdmin,
+    isWorkspaceLoading,
+    workspaceId,
   ]);
 
   if (isChannelLoading || isWorkspaceLoading || isMemberLoading) {

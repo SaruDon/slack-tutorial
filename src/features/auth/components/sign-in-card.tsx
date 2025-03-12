@@ -99,7 +99,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
           </Button>
         </div>
         <p>
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <span
             onClick={() => {
               setState("signUp");

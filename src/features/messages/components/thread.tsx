@@ -72,13 +72,10 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
   const { mutate: createMessage } = useCreateMessage();
   const { mutate: generateUrl } = useGenerateUploadUrl();
 
-  const { results, status, loadMore } = useGetMessages({
+  const { results, status } = useGetMessages({
     channelId,
     parentMessageId: messageId,
   });
-
-  const canLoadMore = status === "CanLoadMore";
-  const isLoadingMore = status === "LoadingMore";
 
   const groupedMessages = results?.reduce(
     (groups, message) => {

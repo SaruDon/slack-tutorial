@@ -36,6 +36,13 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
 
   const onPasswordSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Use confirmPassword here
+    if (password !== confirmPassword) {
+      setError("Passwords don't match");
+      return;
+    }
+
     setPending(true);
     signIn("password", { name, email, password, flow: "signUp" })
       .catch(() => {
@@ -76,10 +83,11 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
           <Input
             disabled={pending}
             onChange={(e) => {
-              setPassword(e.target.value);
-              setIsPasswordMatching(false);
+              // Don't store the value in state if not needed elsewhere
+              const confirmValue = e.target.value;
+              setIsPasswordMatching(confirmValue === password);
             }}
-            placeholder="Password"
+            placeholder="ConfirmPassword"
             type="password"
             required
           ></Input>

@@ -30,6 +30,9 @@ interface EditorProps {
   innerRef?: MutableRefObject<Quill | null>;
   onSubmit: ({ image, body }: EditorValue) => void;
 }
+interface Emoji {
+  native: string;
+}
 
 const Editor = ({
   onCancel,
@@ -144,7 +147,7 @@ const Editor = ({
     }
   };
 
-  const onEmojiSelect = (emoji: any) => {
+  const onEmojiSelect = (emoji: Emoji) => {
     const quill = quilRef.current;
     quill?.insertText(quill?.getSelection()?.index || 0, emoji.native);
   };

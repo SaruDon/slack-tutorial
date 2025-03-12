@@ -1,4 +1,3 @@
-import { Divide } from "lucide-react";
 import Quill from "quill";
 
 import { useState, useEffect, useRef } from "react";
@@ -8,7 +7,7 @@ interface RendererProps {
 }
 
 const Renderer = ({ value }: RendererProps) => {
-  const [isEmpty, setisEmpty] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false);
   const rendererRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -16,7 +15,7 @@ const Renderer = ({ value }: RendererProps) => {
       return;
     }
 
-    const conatiner = rendererRef.current;
+    const container = rendererRef.current;
 
     const quill = new Quill(document.createElement("div"));
     quill.enable(false);
@@ -29,13 +28,13 @@ const Renderer = ({ value }: RendererProps) => {
         .replace(/<(.|\n)*?>/g, "")
         .trim().length === 0;
 
-    setisEmpty(isEmpty);
+    setIsEmpty(isEmpty);
 
-    conatiner.innerHTML = quill.root.innerHTML;
+    container.innerHTML = quill.root.innerHTML;
 
     return () => {
-      if (conatiner) {
-        conatiner.innerHTML = "";
+      if (container) {
+        container.innerHTML = "";
       }
     };
   }, [value]);
