@@ -14,13 +14,11 @@ import Link from "next/link";
 import { useUpdateMember } from "../api/use-update-member";
 import { useRemoveMember } from "../api/use-remove-member";
 import { useCurrentMember } from "../api/use-current-members";
-import { useGetWorkSpace } from "@/features/workspaces/api/use-get-workspace";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { toast } from "sonner";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useRouter } from "next/navigation";
 
-import { Dialog } from "@radix-ui/react-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,10 +54,8 @@ export const Profile = ({ memberId, onClose }: ProfileProps) => {
     useCurrentMember({ workspaceId });
   const { data: member, isLoading } = useGetMember({ id: memberId });
 
-  const { mutate: updateMember, isPending: isUpdateMemberPending } =
-    useUpdateMember();
-  const { mutate: removeMember, isPending: isRemoveMemberPending } =
-    useRemoveMember();
+  const { mutate: updateMember } = useUpdateMember();
+  const { mutate: removeMember } = useRemoveMember();
 
   if (isLoading || isCurrentMemberLoading) {
     return (

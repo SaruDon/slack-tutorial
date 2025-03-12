@@ -4,7 +4,6 @@ import { Doc, Id } from "../../convex/_generated/dataModel";
 import dynamic from "next/dynamic";
 import { Hint } from "./hint";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { Span } from "next/dist/trace";
 import { Thumbnail } from "./thumbnail";
 import { Toolbar } from "./toolbar";
 import { useUpdateMessage } from "@/features/messages/api/use-update-message";

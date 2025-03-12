@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuthActions } from "@convex-dev/auth/react";
 import { useGetWorkSpaces } from "@/features/workspaces/api/use-get-workspaces";
 import { useMemo } from "react";
 import { useEffect } from "react";

@@ -1,4 +1,3 @@
-import { useCurrentMember } from "@/features/members/api/use-current-members";
 import { useGetWorkSpace } from "@/features/workspaces/api/use-get-workspace";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import {
@@ -8,15 +7,15 @@ import {
   MessageSquareText,
 } from "lucide-react";
 import { WorkspaceHeader } from "./workspace-header";
-import { SidebarItem } from "./sidebare-item";
+import { SidebarItem } from "./sidebar-item";
 import { useGetChannels } from "@/features/channels/api/use-get-channels";
 import { WorkspaceSection } from "./workspace-section";
 import { useGetMembers } from "@/features/members/api/use-get-members";
 import { UserItem } from "./user-item";
 import { useCreateChannelModal } from "@/features/channels/store/use-create-channel-modal";
-
 import { useChannelId } from "@/hooks/use-channel-id";
 import { useMemberId } from "@/hooks/use-member-id";
+import { useCurrentMember } from "@/features/members/api/use-current-members";
 
 export const WorkspaceSidebar = () => {
   const memberId = useMemberId();
@@ -65,7 +64,7 @@ export const WorkspaceSidebar = () => {
       <div className="flex flex-col mt-3 px-2">
         <SidebarItem label="Threads" icon={MessageSquareText} id="threads" />
         <SidebarItem
-          label="Dafts & Sent"
+          label="Daft & Sent"
           icon={MessageSquareText}
           id="threads"
         />

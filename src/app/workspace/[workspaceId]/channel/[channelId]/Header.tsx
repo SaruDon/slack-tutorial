@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -45,7 +44,7 @@ export const Header = ({ title }: HeaderProps) => {
 
   const { data: member } = useCurrentMember({ workspaceId });
 
-  const handleEditOpen = (value: boolean) => {
+  const handleEditOpen = () => {
     if (member?.role !== "admin") {
       return;
     }
