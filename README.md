@@ -38,38 +38,40 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 The project uses Convex for backend services. Below are the details of the APIs and hooks provided:
 
-#### `get` Query
+# Authentication System
 
-The `get` query retrieves all workspaces associated with the authenticated user.
+## Overview
 
-- **File**: `convex/workspace.ts`
-- **Path**: `api.workspace.get`
-- **Description**: This query fetches all workspaces linked to the authenticated user. It first retrieves the user ID, then queries the database for all members associated with that user ID. Finally, it fetches the workspace details for each workspace ID and returns them.
+A modern authentication system built with React, TypeScript, and Convex for secure user management.
 
-#### `useGetWorkSpaces` Hook
+### Features
 
-The `useGetWorkSpaces` hook is a React hook that utilizes the `get` query to fetch workspaces.
+#### Authentication Methods
 
-- **File**: `src/features/workspaces/api/use-get-workspaces.ts`
-- **Description**: This hook uses the `useQuery` hook from Convex to fetch the workspaces. It returns the data and a loading state.
+- **Email/Password**: Traditional authentication with secure password handling
+- **Google Authentication**: One-click sign-in with Google accounts
+- **GitHub Authentication**: One-click sign-in with GitHub accounts
 
-### Usage
+#### Convex Integration
 
-To use the `get` query, you can import and call it from your components or services:
+The system integrates with Convex backend through:
 
-```typescript
-import { api } from "../../../../convex/_generated/api";
+- `useQuery` hook for fetching current user data
+- `useAuthActions` hook for handling authentication actions
 
-const workspaces = await api.workspace.get();
-```
+#### Components
 
-To use the `useGetWorkSpaces` hook, you can import and call it in your React components:
+- **AuthScreen**: Container component that handles the auth flow state
+- **SignInCard**: Form component for user login
+- **SignUpCard**: Form component for user registration
+- **UserButton**: Avatar button with dropdown menu for logged-in users
 
-```typescript
-import { useGetWorkSpaces } from "./use-get-workspaces";
+### Security Considerations
 
-const { data, isLoading } = useGetWorkSpaces();
-```
+- Password authentication with secure handling
+- OAuth integration for social login
+- Proper error management without exposing sensitive information
+- Loading states for all asynchronous operations
 
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
