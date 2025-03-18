@@ -43,6 +43,7 @@ The project uses Convex for backend services. Below are the details of the APIs 
 ## Overview
 
 A modern authentication system built with React, TypeScript, and Convex for secure user management.
+In this project Convex OAuth is used.
 
 ### Features
 
@@ -72,6 +73,43 @@ The system integrates with Convex backend through:
 - OAuth integration for social login
 - Proper error management without exposing sensitive information
 - Loading states for all asynchronous operations
+
+
+# Channel Management System
+
+## Overview
+
+A robust channel management system built with React, TypeScript, and Convex for managing workspace channels.
+
+This channel management system provides a complete solution for creating, reading, updating, and deleting channels within workspaces. It leverages Convex for data management and React hooks for state management.
+
+## Features
+
+- Create new channels with custom names
+- Retrieve individual channels by ID
+- List all channels within a workspace
+- Update channel information
+- Remove channels
+- Modal UI for channel creation
+
+## API Integration
+
+The system integrates with Convex backend through:
+
+- `useQuery` hooks for fetching channel data
+- `useMutation` hooks for creating, updating, and removing channels
+
+## Custom Hooks
+
+All API operations are wrapped in custom hooks:
+
+- `useCreateChannel`: Creates a new channel within a workspace
+- `useGetChannel`: Retrieves details of a specific channel by ID
+- `useGetChannels`: Lists all channels within a workspace
+- `useRemoveChannel`: Deletes a channel
+- `useUpdateChannel`: Updates a channel's information
+
+These hooks handle loading states, errors, and success callbacks for a smooth user experience.
 
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
