@@ -59,6 +59,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
         <form onSubmit={onPasswordSignIn} className="space-y-2.5">
           <Input
             disabled={pending}
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
             type="email"
@@ -66,6 +67,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
           ></Input>
           <Input
             disabled={pending}
+            value={password}
             onChange={(e) => {
               setPassword(e.target.value);
             }}
@@ -109,6 +111,17 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
             Sign Up
           </span>
         </p>
+        <Button
+          onClick={() => {
+            setEmail("sarveshdev2002@gmail.com");
+            setPassword("demo1234");
+          }}
+          variant="secondary"
+          size="sm"
+          className="w-full"
+        >
+          Demo Credentials
+        </Button>
       </CardContent>
     </Card>
   );

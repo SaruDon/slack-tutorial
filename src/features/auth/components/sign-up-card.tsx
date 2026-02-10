@@ -82,15 +82,11 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
           ></Input>
           <Input
             disabled={pending}
-            onChange={(e) => {
-              // Don't store the value in state if not needed elsewhere
-              const confirmValue = e.target.value;
-              setIsPasswordMatching(confirmValue === password);
-            }}
-            placeholder="ConfirmPassword"
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
             type="password"
             required
-          ></Input>
+          />
           <Input
             disabled={pending}
             onChange={(e) => {
