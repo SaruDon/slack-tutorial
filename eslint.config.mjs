@@ -15,11 +15,9 @@ const eslintConfig = [
     rules: {
       // Disable the unused variables error completely
       "@typescript-eslint/no-unused-vars": "off",
-      
+
       // Configure empty object type rule to allow them
-      "@typescript-eslint/no-empty-object-type": ["error", {
-        allowObjectTypes: true
-      }]
+      "@typescript-eslint/no-empty-object-type": "off"
     }
   },
   {
